@@ -16,6 +16,7 @@ export type {
   EditorData,
   PagesEditorProps,
   SupportedLanguage,
+  Theme,
 } from './types';
 export { SUPPORTED_LANGUAGES } from './types';
 export {
@@ -35,3 +36,26 @@ export {
   cloneBlock,
   moveArrayItem,
 } from './utils';
+
+// Hooks
+export { useBlockToolbar, useAutoResize, useClickOutside } from './hooks';
+
+// Theme utilities
+export {
+  isDarkTheme,
+  getToolbarButtonClass,
+  getSmallToolbarButtonClass,
+  getToolbarContainerClass,
+  getToolbarDividerClass,
+  getPlaceholderClass,
+  getMutedTextClass,
+  getPrimaryTextClass,
+  getSecondaryTextClass,
+  CALLOUT_VARIANT_STYLES,
+  CALLOUT_ICONS,
+  CALLOUT_LABELS,
+  FONT_SIZE_CLASSES,
+  ALIGNMENT_CLASSES,
+  QUOTE_STYLE_CLASSES,
+  DIVIDER_STYLE_CLASSES,
+} from './theme';

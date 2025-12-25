@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { QuoteBlock as QuoteBlockType, Theme } from '../types';
+import { useToolbarPosition } from '../hooks/useToolbarPosition';
 
 interface QuoteBlockProps {
   block: QuoteBlockType;
@@ -11,7 +12,15 @@ interface QuoteBlockProps {
 export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isDark = theme === 'dark';
+
+  // Smart toolbar positioning
+  const { showBelow } = useToolbarPosition({
+    containerRef,
+    isVisible: showToolbar && !readOnly,
+    minSpaceAbove: 60,
+  });
 
   const styleClasses = {
     default: `border-l-4 pl-4 italic ${isDark ? 'border-slate-600' : 'border-slate-300'}`,
@@ -47,6 +56,7 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnl
 
   return (
     <div
+      ref={containerRef}
       className="group relative"
       onFocus={() => setShowToolbar(true)}
       onBlur={(e) => {
@@ -55,9 +65,11 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnl
         }
       }}
     >
-      {/* Toolbar */}
+      {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute -top-12 left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+          showBelow ? 'top-full mt-2' : '-top-12'
+        } ${
           isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'
         }`}>
           <button

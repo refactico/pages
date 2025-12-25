@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
 import type { TextBlock as TextBlockType, Theme } from '../types';
 import { BoldIcon, ItalicIcon, UnderlineIcon, AlignLeftIcon, AlignCenterIcon, AlignRightIcon } from '../icons';
+import { useToolbarPosition } from '../hooks/useToolbarPosition';
 
 interface TextBlockProps {
   block: TextBlockType;
@@ -14,19 +15,27 @@ const fontSizeMap = {
   base: 'text-base leading-relaxed',
   lg: 'text-lg leading-relaxed',
   xl: 'text-xl leading-relaxed',
-};
+} as const;
 
 const alignmentMap = {
   left: 'text-left',
   center: 'text-center',
   right: 'text-right',
   justify: 'text-justify',
-};
+} as const;
 
-export const TextBlock: React.FC<TextBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isDark = theme === 'dark';
+
+  // Smart toolbar positioning - flip below if not enough space above
+  const { showBelow } = useToolbarPosition({
+    containerRef,
+    isVisible: showToolbar && !readOnly,
+    minSpaceAbove: 60,
+  });
 
   // Auto-resize on mount and content change
   useEffect(() => {
@@ -36,11 +45,11 @@ export const TextBlock: React.FC<TextBlockProps> = ({ block, onUpdate, readOnly,
     }
   }, [block.content]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onUpdate({ ...block, content: e.target.value });
-  };
+  }, [block, onUpdate]);
 
-  const toggleStyle = (style: 'bold' | 'italic' | 'underline' | 'strikethrough' | 'code') => {
+  const toggleStyle = useCallback((style: 'bold' | 'italic' | 'underline' | 'strikethrough' | 'code') => {
     onUpdate({
       ...block,
       style: {
@@ -48,15 +57,22 @@ export const TextBlock: React.FC<TextBlockProps> = ({ block, onUpdate, readOnly,
         [style]: !block.style?.[style],
       },
     });
-  };
+  }, [block, onUpdate]);
 
-  const setAlignment = (alignment: 'left' | 'center' | 'right' | 'justify') => {
+  const setAlignment = useCallback((alignment: 'left' | 'center' | 'right' | 'justify') => {
     onUpdate({ ...block, alignment });
-  };
+  }, [block, onUpdate]);
 
-  const setFontSize = (fontSize: 'sm' | 'base' | 'lg' | 'xl') => {
+  const setFontSize = useCallback((fontSize: 'sm' | 'base' | 'lg' | 'xl') => {
     onUpdate({ ...block, fontSize });
-  };
+  }, [block, onUpdate]);
+
+  const handleFocus = useCallback(() => setShowToolbar(true), []);
+  const handleBlur = useCallback((e: React.FocusEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setShowToolbar(false);
+    }
+  }, []);
 
   const textStyle = {
     fontWeight: block.style?.bold ? 'bold' : 'normal',
@@ -74,17 +90,16 @@ export const TextBlock: React.FC<TextBlockProps> = ({ block, onUpdate, readOnly,
 
   return (
     <div 
+      ref={containerRef}
       className="group relative"
-      onFocus={() => setShowToolbar(true)}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {
-          setShowToolbar(false);
-        }
-      }}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     >
-      {/* Toolbar */}
+      {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute -top-12 left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+          showBelow ? 'top-full mt-2' : '-top-12'
+        } ${
           isDark 
             ? 'bg-slate-800 border-slate-600' 
             : 'bg-white border-slate-200'
@@ -178,4 +193,6 @@ export const TextBlock: React.FC<TextBlockProps> = ({ block, onUpdate, readOnly,
   );
 };
 
+// Memoize to prevent unnecessary re-renders
+export const TextBlock = memo(TextBlockComponent);
 export default TextBlock;

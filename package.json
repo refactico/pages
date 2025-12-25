@@ -1,10 +1,28 @@
 {
-  "name": "vite-react-component-library-starter",
-  "private": true,
-  "version": "0.0.0",
-  "description": "A template for creating React component libraries with Vite, Tailwind, and Storybook.",
-  "author": "rayyamhk",
+  "name": "@refactico/pages",
+  "private": false,
+  "version": "0.1.0",
+  "description": "A component library for building pages with React.",
+  "author": "refactico",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/refactico/pages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/refactico/pages/issues"
+  },
+  "homepage": "https://github.com/refactico/pages#readme",
+  "keywords": [
+    "react",
+    "components",
+    "editor",
+    "pages",
+    "blocks",
+    "content-editor",
+    "rich-text",
+    "tailwindcss"
+  ],
   "type": "module",
   "files": [
     "dist"

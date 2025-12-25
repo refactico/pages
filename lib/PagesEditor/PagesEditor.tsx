@@ -52,6 +52,32 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
 
   const isDark = theme === 'dark';
 
+  // Memoized block factory function
+  const createBlock = useCallback((type: BlockType): EditorBlock => {
+    switch (type) {
+      case 'text':
+        return createTextBlock();
+      case 'heading':
+        return createHeadingBlock();
+      case 'image':
+        return createImageBlock();
+      case 'code':
+        return createCodeBlock();
+      case 'table':
+        return createTableBlock();
+      case 'divider':
+        return createDividerBlock();
+      case 'quote':
+        return createQuoteBlock();
+      case 'list':
+        return createListBlock();
+      case 'callout':
+        return createCalloutBlock();
+      default:
+        return createTextBlock();
+    }
+  }, []);
+
   // Update internal state when initialData changes
   useEffect(() => {
     if (initialData && validateEditorData(initialData)) {
@@ -90,31 +116,6 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
     [data, onChange, debounceDelay]
   );
 
-  const createBlock = (type: BlockType): EditorBlock => {
-    switch (type) {
-      case 'text':
-        return createTextBlock();
-      case 'heading':
-        return createHeadingBlock();
-      case 'image':
-        return createImageBlock();
-      case 'code':
-        return createCodeBlock();
-      case 'table':
-        return createTableBlock();
-      case 'divider':
-        return createDividerBlock();
-      case 'quote':
-        return createQuoteBlock();
-      case 'list':
-        return createListBlock();
-      case 'callout':
-        return createCalloutBlock();
-      default:
-        return createTextBlock();
-    }
-  };
-
   const addBlock = useCallback(
     (type: BlockType, afterIndex?: number) => {
       const newBlock = createBlock(type);
@@ -129,7 +130,7 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
       updateData(newBlocks);
       setShowInitialAddMenu(false);
     },
-    [data.blocks, updateData]
+    [data.blocks, updateData, createBlock]
   );
 
   const updateBlock = useCallback(
@@ -209,21 +210,6 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
     setDraggedIndex(null);
     setDragOverIndex(null);
   };
-
-  // Get JSON output
-  const getJSON = useCallback(() => {
-    return JSON.stringify(data, null, 2);
-  }, [data]);
-
-  // Expose data getter for parent components
-  useEffect(() => {
-    // @ts-ignore - Expose getData method on window for debugging
-    window.__pagesEditorGetData = () => data;
-    return () => {
-      // @ts-ignore
-      delete window.__pagesEditorGetData;
-    };
-  }, [data]);
 
   return (
     <ThemeContext.Provider value={theme}>

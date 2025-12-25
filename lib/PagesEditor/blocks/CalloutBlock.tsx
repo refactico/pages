@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import type { CalloutBlock as CalloutBlockType, Theme } from '../types';
-import { CalloutIcon } from '../icons';
+import { useToolbarPosition } from '../hooks/useToolbarPosition';
 
 interface CalloutBlockProps {
   block: CalloutBlockType;
@@ -66,7 +66,15 @@ const variantLabels = {
 export const CalloutBlock: React.FC<CalloutBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isDark = theme === 'dark';
+
+  // Smart toolbar positioning
+  const { showBelow } = useToolbarPosition({
+    containerRef,
+    isVisible: showToolbar && !readOnly,
+    minSpaceAbove: 60,
+  });
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onUpdate({ ...block, content: e.target.value });
@@ -95,6 +103,7 @@ export const CalloutBlock: React.FC<CalloutBlockProps> = ({ block, onUpdate, rea
 
   return (
     <div
+      ref={containerRef}
       className="group relative"
       onFocus={() => setShowToolbar(true)}
       onBlur={(e) => {
@@ -103,9 +112,11 @@ export const CalloutBlock: React.FC<CalloutBlockProps> = ({ block, onUpdate, rea
         }
       }}
     >
-      {/* Toolbar */}
+      {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute -top-12 left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+          showBelow ? 'top-full mt-2' : '-top-12'
+        } ${
           isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'
         }`}>
           {(Object.keys(variantStyles) as Array<keyof typeof variantStyles>).map((variant) => (

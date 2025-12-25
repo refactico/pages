@@ -2,13 +2,13 @@ import React, { useState, useRef } from 'react';
 import type { ImageBlock as ImageBlockType, Theme } from '../types';
 import { UploadIcon, AlignLeftIcon, AlignCenterIcon, AlignRightIcon, TrashIcon } from '../icons';
 import { fileToBase64 } from '../utils';
+import { useToolbarPosition } from '../hooks/useToolbarPosition';
 
 interface ImageBlockProps {
   block: ImageBlockType;
   onUpdate: (block: ImageBlockType) => void;
   readOnly?: boolean;
   theme?: Theme;
-  isSelected?: boolean;
 }
 
 const alignmentMap = {
@@ -17,10 +17,19 @@ const alignmentMap = {
   right: 'ml-auto',
 };
 
-export const ImageBlock: React.FC<ImageBlockProps> = ({ block, onUpdate, readOnly, theme = 'light', isSelected = false }) => {
+export const ImageBlock: React.FC<ImageBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+  const [showToolbar, setShowToolbar] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isDark = theme === 'dark';
+
+  // Smart toolbar positioning
+  const { showBelow } = useToolbarPosition({
+    containerRef,
+    isVisible: showToolbar && !readOnly && !!block.src,
+    minSpaceAbove: 60,
+  });
 
   const handleFileChange = async (file: File) => {
     if (file && file.type.startsWith('image/')) {
@@ -126,6 +135,7 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({ block, onUpdate, readOnl
 
   return (
     <div 
+      ref={containerRef}
       className="group relative"
       onFocus={() => setShowToolbar(true)}
       onBlur={(e) => {
@@ -134,9 +144,11 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({ block, onUpdate, readOnl
         }
       }}
     >
-      {/* Toolbar */}
+      {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute -top-12 left-1/2 -translate-x-1/2 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+        <div className={`absolute left-1/2 -translate-x-1/2 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+          showBelow ? 'top-full mt-2' : '-top-12'
+        } ${
           isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'
         }`}>
           <button

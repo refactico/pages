@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PagesEditor } from './PagesEditor';
 import type { EditorData, TextBlock as TextBlockType, HeadingBlock as HeadingBlockType } from './types';
@@ -154,7 +154,8 @@ describe('Utils', () => {
       const id1 = generateId();
       const id2 = generateId();
       expect(id1).not.toBe(id2);
-      expect(id1).toMatch(/^block_\d+_[a-z0-9]+$/);
+      // New format uses UUID: block_<uuid>
+      expect(id1).toMatch(/^block_[a-f0-9-]+$/);
     });
   });
 

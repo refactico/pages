@@ -1,7 +1,23 @@
 import type { EditorBlock, EditorData } from './types';
 
+/**
+ * Generate a unique ID for blocks.
+ * Uses crypto.randomUUID() when available (modern browsers & Node 19+),
+ * falls back to a timestamp-based approach for older environments.
+ */
 export const generateId = (): string => {
-  return `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  // Use crypto.randomUUID() for production-grade unique IDs
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return `block_${crypto.randomUUID()}`;
+  }
+  
+  // Fallback for older browsers (rare, but safe)
+  const timestamp = Date.now().toString(36);
+  const randomPart = Math.random().toString(36).substring(2, 11);
+  const counter = (generateId as { _counter?: number })._counter ?? 0;
+  (generateId as { _counter?: number })._counter = counter + 1;
+  
+  return `block_${timestamp}_${randomPart}_${counter.toString(36)}`;
 };
 
 export const createEmptyEditorData = (): EditorData => ({

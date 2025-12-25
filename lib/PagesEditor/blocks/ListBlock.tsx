@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import type { ListBlock as ListBlockType, Theme } from '../types';
 import { PlusIcon, TrashIcon, CheckIcon } from '../icons';
+import { useToolbarPosition } from '../hooks/useToolbarPosition';
 
 interface ListBlockProps {
   block: ListBlockType;
@@ -11,7 +12,15 @@ interface ListBlockProps {
 
 export const ListBlock: React.FC<ListBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
   const [showToolbar, setShowToolbar] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isDark = theme === 'dark';
+
+  // Smart toolbar positioning
+  const { showBelow } = useToolbarPosition({
+    containerRef,
+    isVisible: showToolbar && !readOnly,
+    minSpaceAbove: 60,
+  });
 
   const updateItem = (index: number, value: string) => {
     const newItems = [...block.items];
@@ -85,6 +94,7 @@ export const ListBlock: React.FC<ListBlockProps> = ({ block, onUpdate, readOnly,
 
   return (
     <div 
+      ref={containerRef}
       className="group relative"
       onFocus={() => setShowToolbar(true)}
       onBlur={(e) => {
@@ -93,9 +103,11 @@ export const ListBlock: React.FC<ListBlockProps> = ({ block, onUpdate, readOnly,
         }
       }}
     >
-      {/* Toolbar */}
+      {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute -top-12 left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+          showBelow ? 'top-full mt-2' : '-top-12'
+        } ${
           isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'
         }`}>
           <button
