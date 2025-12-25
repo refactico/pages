@@ -74,13 +74,13 @@ function App() {
 
 ### PagesEditor Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `initialData` | `EditorData` | - | Initial editor content |
-| `onChange` | `(data: EditorData) => void` | - | Callback when content changes |
-| `readOnly` | `boolean` | `false` | Disable editing |
-| `theme` | `'light' \| 'dark'` | `'light'` | Color theme |
-| `placeholder` | `string` | `'Start writing...'` | Empty state placeholder |
+| Prop          | Type                         | Default              | Description                   |
+| ------------- | ---------------------------- | -------------------- | ----------------------------- |
+| `initialData` | `EditorData`                 | -                    | Initial editor content        |
+| `onChange`    | `(data: EditorData) => void` | -                    | Callback when content changes |
+| `readOnly`    | `boolean`                    | `false`              | Disable editing               |
+| `theme`       | `'light' \| 'dark'`          | `'light'`            | Color theme                   |
+| `placeholder` | `string`                     | `'Start writing...'` | Empty state placeholder       |
 
 ### Utility Functions
 
