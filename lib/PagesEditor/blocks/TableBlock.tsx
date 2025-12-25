@@ -10,7 +10,12 @@ interface TableBlockProps {
   theme?: Theme;
 }
 
-export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+export const TableBlock: React.FC<TableBlockProps> = ({
+  block,
+  onUpdate,
+  readOnly,
+  theme = 'light',
+}) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,7 +41,9 @@ export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnl
 
   const addRow = () => {
     const colCount = block.rows[0]?.length || 3;
-    const newRow: TableCell[] = Array(colCount).fill(null).map(() => ({ content: '' }));
+    const newRow: TableCell[] = Array(colCount)
+      .fill(null)
+      .map(() => ({ content: '' }));
     onUpdate({ ...block, rows: [...block.rows, newRow] });
   };
 
@@ -65,7 +72,7 @@ export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnl
       row.map((cell) => ({
         ...cell,
         header: rowIndex === 0 ? !block.hasHeader : false,
-      }))
+      })),
     );
     onUpdate({ ...block, rows: newRows, hasHeader: !block.hasHeader });
   };
@@ -86,14 +93,19 @@ export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnl
     onUpdate({ ...block, rows: newRows });
   };
 
-  const toolbarBtnClass = (isActive?: boolean) => `px-2 py-1 text-sm rounded-lg transition-colors ${
-    isActive
-      ? (isDark ? 'bg-indigo-900/50 text-indigo-400' : 'bg-indigo-100 text-indigo-600')
-      : (isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-700')
-  }`;
+  const toolbarBtnClass = (isActive?: boolean) =>
+    `px-2 py-1 text-sm rounded-lg transition-colors ${
+      isActive
+        ? isDark
+          ? 'bg-indigo-900/50 text-indigo-400'
+          : 'bg-indigo-100 text-indigo-600'
+        : isDark
+          ? 'hover:bg-slate-700 text-slate-300'
+          : 'hover:bg-slate-100 text-slate-700'
+    }`;
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="group relative"
       onFocus={() => setShowToolbar(true)}
@@ -105,11 +117,11 @@ export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnl
     >
       {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
-          showBelow ? 'top-full mt-2' : '-top-12'
-        } ${
-          isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'
-        }`}>
+        <div
+          className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+            showBelow ? 'top-full mt-2' : '-top-12'
+          } ${isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'}`}
+        >
           <button
             onClick={addRow}
             className={`flex items-center gap-1 ${toolbarBtnClass()}`}
@@ -158,10 +170,15 @@ export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnl
       )}
 
       <div className="overflow-x-auto rounded-xl">
-        <table className={`w-full border-collapse border ${isDark ? 'border-slate-600' : 'border-slate-300'}`}>
+        <table
+          className={`w-full border-collapse border ${isDark ? 'border-slate-600' : 'border-slate-300'}`}
+        >
           <tbody>
             {block.rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="group/row">
+              <tr
+                key={rowIndex}
+                className="group/row"
+              >
                 {row.map((cell, colIndex) => {
                   const isHeader = block.hasHeader && rowIndex === 0;
                   const CellTag = isHeader ? 'th' : 'td';
@@ -169,8 +186,8 @@ export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnl
                     cell.alignment === 'center'
                       ? 'text-center'
                       : cell.alignment === 'right'
-                      ? 'text-right'
-                      : 'text-left';
+                        ? 'text-right'
+                        : 'text-left';
 
                   return (
                     <CellTag
@@ -179,12 +196,18 @@ export const TableBlock: React.FC<TableBlockProps> = ({ block, onUpdate, readOnl
                         isDark ? 'border-slate-600' : 'border-slate-300'
                       } ${
                         isHeader
-                          ? (isDark ? 'bg-slate-800 font-semibold' : 'bg-slate-100 font-semibold')
-                          : (isDark ? 'bg-slate-900' : 'bg-white')
+                          ? isDark
+                            ? 'bg-slate-800 font-semibold'
+                            : 'bg-slate-100 font-semibold'
+                          : isDark
+                            ? 'bg-slate-900'
+                            : 'bg-white'
                       } ${alignClass}`}
                     >
                       {readOnly ? (
-                        <div className={`px-3 py-2 min-h-[40px] ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>
+                        <div
+                          className={`px-3 py-2 min-h-[40px] ${isDark ? 'text-slate-200' : 'text-slate-700'}`}
+                        >
                           {cell.content}
                         </div>
                       ) : (

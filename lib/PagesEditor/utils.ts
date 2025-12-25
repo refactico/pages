@@ -10,13 +10,13 @@ export const generateId = (): string => {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return `block_${crypto.randomUUID()}`;
   }
-  
+
   // Fallback for older browsers (rare, but safe)
   const timestamp = Date.now().toString(36);
   const randomPart = Math.random().toString(36).substring(2, 11);
   const counter = (generateId as { _counter?: number })._counter ?? 0;
   (generateId as { _counter?: number })._counter = counter + 1;
-  
+
   return `block_${timestamp}_${randomPart}_${counter.toString(36)}`;
 };
 
@@ -35,7 +35,10 @@ export const createTextBlock = (content: string = ''): EditorBlock => ({
   alignment: 'left',
 });
 
-export const createHeadingBlock = (level: 1 | 2 | 3 | 4 | 5 | 6 = 2, content: string = ''): EditorBlock => ({
+export const createHeadingBlock = (
+  level: 1 | 2 | 3 | 4 | 5 | 6 = 2,
+  content: string = '',
+): EditorBlock => ({
   type: 'heading',
   id: generateId(),
   content,
@@ -52,7 +55,10 @@ export const createImageBlock = (src: string = '', alt: string = ''): EditorBloc
   alignment: 'center',
 });
 
-export const createCodeBlock = (code: string = '', language: string = 'javascript'): EditorBlock => ({
+export const createCodeBlock = (
+  code: string = '',
+  language: string = 'javascript',
+): EditorBlock => ({
   type: 'code',
   id: generateId(),
   code,
@@ -63,12 +69,16 @@ export const createCodeBlock = (code: string = '', language: string = 'javascrip
 export const createTableBlock = (rows: number = 3, cols: number = 3): EditorBlock => ({
   type: 'table',
   id: generateId(),
-  rows: Array(rows).fill(null).map((_, rowIndex) =>
-    Array(cols).fill(null).map(() => ({
-      content: '',
-      header: rowIndex === 0,
-    }))
-  ),
+  rows: Array(rows)
+    .fill(null)
+    .map((_, rowIndex) =>
+      Array(cols)
+        .fill(null)
+        .map(() => ({
+          content: '',
+          header: rowIndex === 0,
+        })),
+    ),
   hasHeader: true,
 });
 
@@ -85,7 +95,9 @@ export const createQuoteBlock = (content: string = ''): EditorBlock => ({
   style: 'default',
 });
 
-export const createListBlock = (listType: 'bullet' | 'numbered' | 'checklist' = 'bullet'): EditorBlock => ({
+export const createListBlock = (
+  listType: 'bullet' | 'numbered' | 'checklist' = 'bullet',
+): EditorBlock => ({
   type: 'list',
   id: generateId(),
   items: [''],
@@ -93,7 +105,9 @@ export const createListBlock = (listType: 'bullet' | 'numbered' | 'checklist' = 
   checkedItems: listType === 'checklist' ? [false] : undefined,
 });
 
-export const createCalloutBlock = (variant: 'info' | 'warning' | 'success' | 'error' | 'tip' = 'info'): EditorBlock => ({
+export const createCalloutBlock = (
+  variant: 'info' | 'warning' | 'success' | 'error' | 'tip' = 'info',
+): EditorBlock => ({
   type: 'callout',
   id: generateId(),
   content: '',

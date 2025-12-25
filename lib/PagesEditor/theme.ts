@@ -11,24 +11,27 @@ export const isDarkTheme = (theme: Theme): boolean => theme === 'dark';
  */
 export const getToolbarButtonClass = (isActive: boolean | undefined, isDark: boolean): string => {
   const baseClass = 'p-2 rounded-lg transition-colors';
-  
+
   if (isActive) {
     return `${baseClass} ${isDark ? 'bg-slate-600 text-white' : 'bg-slate-200 text-slate-900'}`;
   }
-  
+
   return `${baseClass} ${isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-600'}`;
 };
 
 /**
  * Generate small toolbar button class (used in list items, etc.)
  */
-export const getSmallToolbarButtonClass = (isActive: boolean | undefined, isDark: boolean): string => {
+export const getSmallToolbarButtonClass = (
+  isActive: boolean | undefined,
+  isDark: boolean,
+): string => {
   const baseClass = 'px-2 py-1 text-sm rounded-lg transition-colors';
-  
+
   if (isActive) {
     return `${baseClass} ${isDark ? 'bg-slate-600 text-white' : 'bg-slate-200 text-slate-900'}`;
   }
-  
+
   return `${baseClass} ${isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-700'}`;
 };
 
@@ -202,7 +205,7 @@ export const ALIGNMENT_CLASSES = {
  * Quote style mapping
  */
 export const QUOTE_STYLE_CLASSES = {
-  default: (isDark: boolean) => 
+  default: (isDark: boolean) =>
     `border-l-4 pl-4 italic ${isDark ? 'border-slate-600' : 'border-slate-300'}`,
   bordered: (isDark: boolean) =>
     `border-l-4 pl-4 py-3 rounded-r ${isDark ? 'border-indigo-500 bg-indigo-950/30' : 'border-indigo-500 bg-indigo-50'}`,

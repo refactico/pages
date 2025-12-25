@@ -1,11 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef, createContext, useContext } from 'react';
-import type {
-  EditorData,
-  EditorBlock,
-  PagesEditorProps,
-  BlockType,
-  Theme,
-} from './types';
+import type { EditorData, EditorBlock, PagesEditorProps, BlockType, Theme } from './types';
 import {
   createEmptyEditorData,
   createTextBlock,
@@ -102,7 +96,7 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
         updatedAt: new Date().toISOString(),
       };
       setData(newData);
-      
+
       // Debounced onChange callback
       if (onChange) {
         if (debounceTimerRef.current) {
@@ -113,24 +107,24 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
         }, debounceDelay);
       }
     },
-    [data, onChange, debounceDelay]
+    [data, onChange, debounceDelay],
   );
 
   const addBlock = useCallback(
     (type: BlockType, afterIndex?: number) => {
       const newBlock = createBlock(type);
       const newBlocks = [...data.blocks];
-      
+
       if (afterIndex !== undefined && afterIndex >= 0) {
         newBlocks.splice(afterIndex + 1, 0, newBlock);
       } else {
         newBlocks.push(newBlock);
       }
-      
+
       updateData(newBlocks);
       setShowInitialAddMenu(false);
     },
-    [data.blocks, updateData, createBlock]
+    [data.blocks, updateData, createBlock],
   );
 
   const updateBlock = useCallback(
@@ -139,7 +133,7 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
       newBlocks[index] = block;
       updateData(newBlocks);
     },
-    [data.blocks, updateData]
+    [data.blocks, updateData],
   );
 
   const deleteBlock = useCallback(
@@ -147,7 +141,7 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
       const newBlocks = data.blocks.filter((_, i) => i !== index);
       updateData(newBlocks);
     },
-    [data.blocks, updateData]
+    [data.blocks, updateData],
   );
 
   const duplicateBlock = useCallback(
@@ -159,7 +153,7 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
       newBlocks.splice(index + 1, 0, newBlock);
       updateData(newBlocks);
     },
-    [data.blocks, updateData]
+    [data.blocks, updateData],
   );
 
   const moveBlockUp = useCallback(
@@ -168,7 +162,7 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
       const newBlocks = moveArrayItem(data.blocks, index, index - 1);
       updateData(newBlocks);
     },
-    [data.blocks, updateData]
+    [data.blocks, updateData],
   );
 
   const moveBlockDown = useCallback(
@@ -177,7 +171,7 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
       const newBlocks = moveArrayItem(data.blocks, index, index + 1);
       updateData(newBlocks);
     },
-    [data.blocks, updateData]
+    [data.blocks, updateData],
   );
 
   // Drag and drop handlers
@@ -201,12 +195,12 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     const dragIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
-    
+
     if (dragIndex !== dropIndex && !isNaN(dragIndex)) {
       const newBlocks = moveArrayItem(data.blocks, dragIndex, dropIndex);
       updateData(newBlocks);
     }
-    
+
     setDraggedIndex(null);
     setDragOverIndex(null);
   };
@@ -219,7 +213,9 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
           {data.blocks.length === 0 ? (
             // Empty state
             <div className="text-center py-16">
-              <p className={`mb-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{placeholder}</p>
+              <p className={`mb-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                {placeholder}
+              </p>
               {!readOnly && (
                 <div className="relative inline-block">
                   <button
@@ -284,8 +280,8 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
                   <button
                     onClick={() => setShowInitialAddMenu(true)}
                     className={`flex items-center gap-2 px-4 py-2 border-2 border-dashed rounded-lg transition-colors ${
-                      isDark 
-                        ? 'text-slate-500 hover:text-slate-300 border-slate-700 hover:border-slate-500' 
+                      isDark
+                        ? 'text-slate-500 hover:text-slate-300 border-slate-700 hover:border-slate-500'
                         : 'text-slate-400 hover:text-slate-600 border-slate-300 hover:border-slate-400'
                     }`}
                   >

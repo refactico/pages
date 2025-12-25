@@ -18,7 +18,9 @@ interface UseBlockToolbarReturn {
  * Custom hook to manage toolbar visibility for block components.
  * Uses focus/blur pattern to show toolbar when block is focused.
  */
-export function useBlockToolbar({ readOnly = false }: UseBlockToolbarOptions = {}): UseBlockToolbarReturn {
+export function useBlockToolbar({
+  readOnly = false,
+}: UseBlockToolbarOptions = {}): UseBlockToolbarReturn {
   const [showToolbar, setShowToolbar] = useState(false);
 
   const handleFocus = useCallback(() => {

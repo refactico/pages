@@ -63,7 +63,12 @@ const variantLabels = {
   tip: 'Tip',
 };
 
-export const CalloutBlock: React.FC<CalloutBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+export const CalloutBlock: React.FC<CalloutBlockProps> = ({
+  block,
+  onUpdate,
+  readOnly,
+  theme = 'light',
+}) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,11 +100,16 @@ export const CalloutBlock: React.FC<CalloutBlockProps> = ({ block, onUpdate, rea
   const variantStyles = getVariantStyles(isDark);
   const styles = variantStyles[block.variant];
 
-  const toolbarBtnClass = (isActive?: boolean) => `px-2 py-1 text-sm rounded-lg transition-colors ${
-    isActive
-      ? (isDark ? 'bg-slate-600 text-white' : 'bg-slate-200 text-slate-900')
-      : (isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-700')
-  }`;
+  const toolbarBtnClass = (isActive?: boolean) =>
+    `px-2 py-1 text-sm rounded-lg transition-colors ${
+      isActive
+        ? isDark
+          ? 'bg-slate-600 text-white'
+          : 'bg-slate-200 text-slate-900'
+        : isDark
+          ? 'hover:bg-slate-700 text-slate-300'
+          : 'hover:bg-slate-100 text-slate-700'
+    }`;
 
   return (
     <div
@@ -114,11 +124,11 @@ export const CalloutBlock: React.FC<CalloutBlockProps> = ({ block, onUpdate, rea
     >
       {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
-          showBelow ? 'top-full mt-2' : '-top-12'
-        } ${
-          isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'
-        }`}>
+        <div
+          className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+            showBelow ? 'top-full mt-2' : '-top-12'
+          } ${isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'}`}
+        >
           {(Object.keys(variantStyles) as Array<keyof typeof variantStyles>).map((variant) => (
             <button
               key={variant}
@@ -142,7 +152,9 @@ export const CalloutBlock: React.FC<CalloutBlockProps> = ({ block, onUpdate, rea
                 {block.title && (
                   <p className={`font-semibold mb-1 ${styles.title}`}>{block.title}</p>
                 )}
-                <p className={`whitespace-pre-wrap break-words ${styles.content}`}>{block.content}</p>
+                <p className={`whitespace-pre-wrap break-words ${styles.content}`}>
+                  {block.content}
+                </p>
               </>
             ) : (
               <>

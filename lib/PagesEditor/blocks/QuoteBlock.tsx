@@ -9,7 +9,12 @@ interface QuoteBlockProps {
   theme?: Theme;
 }
 
-export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+export const QuoteBlock: React.FC<QuoteBlockProps> = ({
+  block,
+  onUpdate,
+  readOnly,
+  theme = 'light',
+}) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,11 +53,16 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnl
     onUpdate({ ...block, style });
   };
 
-  const toolbarBtnClass = (isActive?: boolean) => `px-3 py-1.5 text-sm rounded-lg transition-colors ${
-    isActive 
-      ? (isDark ? 'bg-slate-600 text-white' : 'bg-slate-200 text-slate-900')
-      : (isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-600')
-  }`;
+  const toolbarBtnClass = (isActive?: boolean) =>
+    `px-3 py-1.5 text-sm rounded-lg transition-colors ${
+      isActive
+        ? isDark
+          ? 'bg-slate-600 text-white'
+          : 'bg-slate-200 text-slate-900'
+        : isDark
+          ? 'hover:bg-slate-700 text-slate-300'
+          : 'hover:bg-slate-100 text-slate-600'
+    }`;
 
   return (
     <div
@@ -67,11 +77,11 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnl
     >
       {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
-          showBelow ? 'top-full mt-2' : '-top-12'
-        } ${
-          isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'
-        }`}>
+        <div
+          className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+            showBelow ? 'top-full mt-2' : '-top-12'
+          } ${isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'}`}
+        >
           <button
             onClick={() => setStyle('default')}
             className={toolbarBtnClass(block.style === 'default' || !block.style)}
@@ -93,12 +103,16 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnl
         </div>
       )}
 
-      <blockquote className={`${styleClasses[block.style || 'default']} ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+      <blockquote
+        className={`${styleClasses[block.style || 'default']} ${isDark ? 'text-slate-300' : 'text-slate-700'}`}
+      >
         {readOnly ? (
           <>
             <p className="text-lg leading-relaxed whitespace-pre-wrap">{block.content}</p>
             {block.author && (
-              <cite className={`block mt-3 text-sm not-italic ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              <cite
+                className={`block mt-3 text-sm not-italic ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+              >
                 — {block.author}
               </cite>
             )}
@@ -121,7 +135,9 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ block, onUpdate, readOnl
               onChange={handleAuthorChange}
               placeholder="— Author name"
               className={`w-full mt-2 text-sm bg-transparent outline-none ${
-                isDark ? 'text-slate-400 placeholder:text-slate-500' : 'text-slate-500 placeholder:text-slate-400'
+                isDark
+                  ? 'text-slate-400 placeholder:text-slate-500'
+                  : 'text-slate-500 placeholder:text-slate-400'
               }`}
             />
           </>

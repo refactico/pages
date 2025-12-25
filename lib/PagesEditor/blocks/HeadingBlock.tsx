@@ -25,7 +25,12 @@ const alignmentMap = {
   right: 'text-right',
 };
 
-export const HeadingBlock: React.FC<HeadingBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+export const HeadingBlock: React.FC<HeadingBlockProps> = ({
+  block,
+  onUpdate,
+  readOnly,
+  theme = 'light',
+}) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,11 +55,16 @@ export const HeadingBlock: React.FC<HeadingBlockProps> = ({ block, onUpdate, rea
     onUpdate({ ...block, alignment });
   };
 
-  const toolbarBtnClass = (isActive?: boolean) => `p-2 rounded-lg transition-colors ${
-    isActive 
-      ? (isDark ? 'bg-slate-600 text-white' : 'bg-slate-200 text-slate-900')
-      : (isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-600')
-  }`;
+  const toolbarBtnClass = (isActive?: boolean) =>
+    `p-2 rounded-lg transition-colors ${
+      isActive
+        ? isDark
+          ? 'bg-slate-600 text-white'
+          : 'bg-slate-200 text-slate-900'
+        : isDark
+          ? 'hover:bg-slate-700 text-slate-300'
+          : 'hover:bg-slate-100 text-slate-600'
+    }`;
 
   return (
     <div
@@ -69,19 +79,17 @@ export const HeadingBlock: React.FC<HeadingBlockProps> = ({ block, onUpdate, rea
     >
       {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
-          showBelow ? 'top-full mt-2' : '-top-12'
-        } ${
-          isDark 
-            ? 'bg-slate-800 border-slate-600' 
-            : 'bg-white border-slate-200'
-        }`}>
+        <div
+          className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+            showBelow ? 'top-full mt-2' : '-top-12'
+          } ${isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'}`}
+        >
           <select
             value={block.level}
             onChange={(e) => setLevel(parseInt(e.target.value) as 1 | 2 | 3 | 4 | 5 | 6)}
             className={`px-2 py-1.5 text-sm rounded-lg border ${
-              isDark 
-                ? 'bg-slate-700 border-slate-600 text-slate-200' 
+              isDark
+                ? 'bg-slate-700 border-slate-600 text-slate-200'
                 : 'bg-white border-slate-200 text-slate-700'
             }`}
           >
@@ -123,7 +131,9 @@ export const HeadingBlock: React.FC<HeadingBlockProps> = ({ block, onUpdate, rea
             isDark ? 'text-white' : 'text-slate-900'
           }`}
         >
-          {block.content || <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Empty heading</span>}
+          {block.content || (
+            <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Empty heading</span>
+          )}
         </div>
       ) : (
         <input
@@ -133,8 +143,8 @@ export const HeadingBlock: React.FC<HeadingBlockProps> = ({ block, onUpdate, rea
           onChange={handleChange}
           placeholder={`Heading ${block.level}`}
           className={`w-full p-2 outline-none bg-transparent ${headingSizeMap[block.level]} ${alignmentMap[block.alignment || 'left']} ${
-            isDark 
-              ? 'text-white placeholder:text-slate-500' 
+            isDark
+              ? 'text-white placeholder:text-slate-500'
               : 'text-slate-900 placeholder:text-slate-400'
           }`}
         />

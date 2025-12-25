@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import type { 
-  EditorBlock, 
+import type {
+  EditorBlock,
   Theme,
   TextBlock as TextBlockType,
   HeadingBlock as HeadingBlockType,
@@ -83,41 +83,98 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isSelected]);
 
-  const handleBlockClick = useCallback((e: React.MouseEvent) => {
-    // Don't select if clicking on an input/textarea/button inside the block
-    const target = e.target as HTMLElement;
-    const interactiveElements = ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'];
-    if (interactiveElements.includes(target.tagName)) {
-      return;
-    }
-    if (!readOnly) {
-      setIsSelected(true);
-    }
-  }, [readOnly]);
+  const handleBlockClick = useCallback(
+    (e: React.MouseEvent) => {
+      // Don't select if clicking on an input/textarea/button inside the block
+      const target = e.target as HTMLElement;
+      const interactiveElements = ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'];
+      if (interactiveElements.includes(target.tagName)) {
+        return;
+      }
+      if (!readOnly) {
+        setIsSelected(true);
+      }
+    },
+    [readOnly],
+  );
 
   // Type-safe block renderer using discriminated union
   const renderBlock = useCallback(() => {
     const commonProps = { readOnly, theme };
-    
+
     switch (block.type) {
       case 'text':
-        return <TextBlock block={block} onUpdate={(b: TextBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <TextBlock
+            block={block}
+            onUpdate={(b: TextBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'heading':
-        return <HeadingBlock block={block} onUpdate={(b: HeadingBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <HeadingBlock
+            block={block}
+            onUpdate={(b: HeadingBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'image':
-        return <ImageBlock block={block} onUpdate={(b: ImageBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <ImageBlock
+            block={block}
+            onUpdate={(b: ImageBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'code':
-        return <CodeBlock block={block} onUpdate={(b: CodeBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <CodeBlock
+            block={block}
+            onUpdate={(b: CodeBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'table':
-        return <TableBlock block={block} onUpdate={(b: TableBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <TableBlock
+            block={block}
+            onUpdate={(b: TableBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'divider':
-        return <DividerBlock block={block} onUpdate={(b: DividerBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <DividerBlock
+            block={block}
+            onUpdate={(b: DividerBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'quote':
-        return <QuoteBlock block={block} onUpdate={(b: QuoteBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <QuoteBlock
+            block={block}
+            onUpdate={(b: QuoteBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'list':
-        return <ListBlock block={block} onUpdate={(b: ListBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <ListBlock
+            block={block}
+            onUpdate={(b: ListBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       case 'callout':
-        return <CalloutBlock block={block} onUpdate={(b: CalloutBlockType) => onUpdate(b)} {...commonProps} />;
+        return (
+          <CalloutBlock
+            block={block}
+            onUpdate={(b: CalloutBlockType) => onUpdate(b)}
+            {...commonProps}
+          />
+        );
       default: {
         // TypeScript exhaustive check - this should never happen
         const _exhaustiveCheck: never = block;
@@ -127,56 +184,63 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
   }, [block, onUpdate, readOnly, theme]);
 
   const buttonBaseClass = `p-1.5 rounded-lg transition-all ${
-    isDark 
-      ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-700' 
+    isDark
+      ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-700'
       : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
   }`;
 
   const showControls = !readOnly && isSelected;
 
   // Handle keyboard navigation
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (readOnly || !isSelected) return;
-    
-    switch (e.key) {
-      case 'Escape':
-        setIsSelected(false);
-        setShowAddMenu(false);
-        break;
-      case 'Delete':
-      case 'Backspace':
-        // Only delete if not focused on an input
-        if (!(e.target as HTMLElement).matches('input, textarea, [contenteditable]')) {
-          e.preventDefault();
-          onDelete();
-        }
-        break;
-      case 'ArrowUp':
-        if (e.altKey) {
-          e.preventDefault();
-          onMoveUp();
-        }
-        break;
-      case 'ArrowDown':
-        if (e.altKey) {
-          e.preventDefault();
-          onMoveDown();
-        }
-        break;
-      case 'd':
-        if (e.ctrlKey || e.metaKey) {
-          e.preventDefault();
-          onDuplicate();
-        }
-        break;
-    }
-  }, [readOnly, isSelected, onDelete, onMoveUp, onMoveDown, onDuplicate]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (readOnly || !isSelected) return;
+
+      switch (e.key) {
+        case 'Escape':
+          setIsSelected(false);
+          setShowAddMenu(false);
+          break;
+        case 'Delete':
+        case 'Backspace':
+          // Only delete if not focused on an input
+          if (!(e.target as HTMLElement).matches('input, textarea, [contenteditable]')) {
+            e.preventDefault();
+            onDelete();
+          }
+          break;
+        case 'ArrowUp':
+          if (e.altKey) {
+            e.preventDefault();
+            onMoveUp();
+          }
+          break;
+        case 'ArrowDown':
+          if (e.altKey) {
+            e.preventDefault();
+            onMoveDown();
+          }
+          break;
+        case 'd':
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            onDuplicate();
+          }
+          break;
+      }
+    },
+    [readOnly, isSelected, onDelete, onMoveUp, onMoveDown, onDuplicate],
+  );
 
   // Base border style for edit mode (always visible)
   const editModeBorderClass = !readOnly
     ? isSelected
-      ? (isDark ? 'ring-2 ring-indigo-500 rounded-lg bg-slate-800/30' : 'ring-2 ring-indigo-500 rounded-lg bg-indigo-50/30')
-      : (isDark ? 'border border-slate-700 rounded-lg hover:border-slate-500' : 'border border-slate-200 rounded-lg hover:border-slate-400')
+      ? isDark
+        ? 'ring-2 ring-indigo-500 rounded-lg bg-slate-800/30'
+        : 'ring-2 ring-indigo-500 rounded-lg bg-indigo-50/30'
+      : isDark
+        ? 'border border-slate-700 rounded-lg hover:border-slate-500'
+        : 'border border-slate-200 rounded-lg hover:border-slate-400'
     : '';
 
   // Generate accessible block type label
@@ -202,14 +266,18 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
     >
       {/* Top toolbar when selected */}
       {showControls && (
-        <div 
-          role="toolbar" 
+        <div
+          role="toolbar"
           aria-label="Block controls"
           className={`flex items-center justify-between gap-1 px-2 py-1.5 mb-1 rounded-t-lg border-b ${
             isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'
           }`}
         >
-          <div className="flex items-center gap-1" role="group" aria-label="Reorder controls">
+          <div
+            className="flex items-center gap-1"
+            role="group"
+            aria-label="Reorder controls"
+          >
             {/* Drag handle */}
             <button
               type="button"
@@ -221,7 +289,10 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
             </button>
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); onMoveUp(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveUp();
+              }}
               disabled={index === 0}
               className={`${buttonBaseClass} disabled:opacity-30 disabled:cursor-not-allowed`}
               title="Move up (Alt+↑)"
@@ -232,7 +303,10 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
             </button>
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); onMoveDown(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveDown();
+              }}
               disabled={index === totalBlocks - 1}
               className={`${buttonBaseClass} disabled:opacity-30 disabled:cursor-not-allowed`}
               title="Move down (Alt+↓)"
@@ -242,10 +316,17 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
               <ChevronDownIcon size={16} />
             </button>
           </div>
-          <div className="flex items-center gap-1" role="group" aria-label="Block actions">
+          <div
+            className="flex items-center gap-1"
+            role="group"
+            aria-label="Block actions"
+          >
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); setShowAddMenu(!showAddMenu); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAddMenu(!showAddMenu);
+              }}
               className={`${buttonBaseClass} hover:!text-indigo-500`}
               title="Add block below"
               aria-label="Add new block below"
@@ -256,7 +337,10 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
             </button>
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); onDuplicate(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDuplicate();
+              }}
               className={`${buttonBaseClass} hover:!text-indigo-500`}
               title="Duplicate (Ctrl+D)"
               aria-label="Duplicate block"
@@ -265,7 +349,10 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
             </button>
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); onDelete(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
               className={`${buttonBaseClass} hover:!text-red-500`}
               title="Delete"
               aria-label="Delete block"
@@ -290,9 +377,7 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
       )}
 
       {/* Block content */}
-      <div className="relative px-2 py-2">
-        {renderBlock()}
-      </div>
+      <div className="relative px-2 py-2">{renderBlock()}</div>
     </div>
   );
 };

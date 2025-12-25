@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
 import type { TextBlock as TextBlockType, Theme } from '../types';
-import { BoldIcon, ItalicIcon, UnderlineIcon, AlignLeftIcon, AlignCenterIcon, AlignRightIcon } from '../icons';
+import {
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  AlignLeftIcon,
+  AlignCenterIcon,
+  AlignRightIcon,
+} from '../icons';
 import { useToolbarPosition } from '../hooks/useToolbarPosition';
 
 interface TextBlockProps {
@@ -24,7 +31,12 @@ const alignmentMap = {
   justify: 'text-justify',
 } as const;
 
-const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+const TextBlockComponent: React.FC<TextBlockProps> = ({
+  block,
+  onUpdate,
+  readOnly,
+  theme = 'light',
+}) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,27 +57,39 @@ const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnl
     }
   }, [block.content]);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onUpdate({ ...block, content: e.target.value });
-  }, [block, onUpdate]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onUpdate({ ...block, content: e.target.value });
+    },
+    [block, onUpdate],
+  );
 
-  const toggleStyle = useCallback((style: 'bold' | 'italic' | 'underline' | 'strikethrough' | 'code') => {
-    onUpdate({
-      ...block,
-      style: {
-        ...block.style,
-        [style]: !block.style?.[style],
-      },
-    });
-  }, [block, onUpdate]);
+  const toggleStyle = useCallback(
+    (style: 'bold' | 'italic' | 'underline' | 'strikethrough' | 'code') => {
+      onUpdate({
+        ...block,
+        style: {
+          ...block.style,
+          [style]: !block.style?.[style],
+        },
+      });
+    },
+    [block, onUpdate],
+  );
 
-  const setAlignment = useCallback((alignment: 'left' | 'center' | 'right' | 'justify') => {
-    onUpdate({ ...block, alignment });
-  }, [block, onUpdate]);
+  const setAlignment = useCallback(
+    (alignment: 'left' | 'center' | 'right' | 'justify') => {
+      onUpdate({ ...block, alignment });
+    },
+    [block, onUpdate],
+  );
 
-  const setFontSize = useCallback((fontSize: 'sm' | 'base' | 'lg' | 'xl') => {
-    onUpdate({ ...block, fontSize });
-  }, [block, onUpdate]);
+  const setFontSize = useCallback(
+    (fontSize: 'sm' | 'base' | 'lg' | 'xl') => {
+      onUpdate({ ...block, fontSize });
+    },
+    [block, onUpdate],
+  );
 
   const handleFocus = useCallback(() => setShowToolbar(true), []);
   const handleBlur = useCallback((e: React.FocusEvent) => {
@@ -77,19 +101,28 @@ const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnl
   const textStyle = {
     fontWeight: block.style?.bold ? 'bold' : 'normal',
     fontStyle: block.style?.italic ? 'italic' : 'normal',
-    textDecoration: block.style?.underline ? 'underline' : block.style?.strikethrough ? 'line-through' : 'none',
+    textDecoration: block.style?.underline
+      ? 'underline'
+      : block.style?.strikethrough
+        ? 'line-through'
+        : 'none',
     color: block.style?.color || undefined,
     backgroundColor: block.style?.backgroundColor || 'transparent',
   };
 
-  const toolbarBtnClass = (isActive?: boolean) => `p-2 rounded-lg transition-colors ${
-    isActive 
-      ? (isDark ? 'bg-slate-600 text-white' : 'bg-slate-200 text-slate-900')
-      : (isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-600')
-  }`;
+  const toolbarBtnClass = (isActive?: boolean) =>
+    `p-2 rounded-lg transition-colors ${
+      isActive
+        ? isDark
+          ? 'bg-slate-600 text-white'
+          : 'bg-slate-200 text-slate-900'
+        : isDark
+          ? 'hover:bg-slate-700 text-slate-300'
+          : 'hover:bg-slate-100 text-slate-600'
+    }`;
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="group relative"
       onFocus={handleFocus}
@@ -97,13 +130,11 @@ const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnl
     >
       {/* Toolbar - positions above or below based on available space */}
       {showToolbar && !readOnly && (
-        <div className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
-          showBelow ? 'top-full mt-2' : '-top-12'
-        } ${
-          isDark 
-            ? 'bg-slate-800 border-slate-600' 
-            : 'bg-white border-slate-200'
-        }`}>
+        <div
+          className={`absolute left-0 flex items-center gap-1 p-1.5 rounded-xl shadow-lg border z-10 ${
+            showBelow ? 'top-full mt-2' : '-top-12'
+          } ${isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-slate-200'}`}
+        >
           <button
             onClick={() => toggleStyle('bold')}
             className={toolbarBtnClass(block.style?.bold)}
@@ -152,8 +183,8 @@ const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnl
             value={block.fontSize || 'base'}
             onChange={(e) => setFontSize(e.target.value as 'sm' | 'base' | 'lg' | 'xl')}
             className={`px-2 py-1.5 text-sm rounded-lg border ${
-              isDark 
-                ? 'bg-slate-700 border-slate-600 text-slate-200' 
+              isDark
+                ? 'bg-slate-700 border-slate-600 text-slate-200'
                 : 'bg-white border-slate-200 text-slate-700'
             }`}
           >
@@ -172,7 +203,9 @@ const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnl
             isDark ? 'text-slate-200' : 'text-slate-800'
           }`}
         >
-          {block.content || <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Empty text block</span>}
+          {block.content || (
+            <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Empty text block</span>
+          )}
         </div>
       ) : (
         <textarea
@@ -182,8 +215,8 @@ const TextBlockComponent: React.FC<TextBlockProps> = ({ block, onUpdate, readOnl
           placeholder="Start typing..."
           style={textStyle}
           className={`w-full min-h-[2.5rem] p-2 resize-none outline-none bg-transparent ${fontSizeMap[block.fontSize || 'base']} ${alignmentMap[block.alignment || 'left']} ${
-            isDark 
-              ? 'text-slate-200 placeholder:text-slate-500' 
+            isDark
+              ? 'text-slate-200 placeholder:text-slate-500'
               : 'text-slate-800 placeholder:text-slate-400'
           }`}
           rows={1}

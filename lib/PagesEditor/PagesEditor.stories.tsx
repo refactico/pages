@@ -76,14 +76,16 @@ const sampleData: EditorData = {
     {
       type: 'text',
       id: 'text-1',
-      content: 'This is a Medium-like block editor for creating beautiful course content. You can add various types of blocks including text, images, code, tables, and more.',
+      content:
+        'This is a Medium-like block editor for creating beautiful course content. You can add various types of blocks including text, images, code, tables, and more.',
       fontSize: 'base',
       alignment: 'left',
     },
     {
       type: 'callout',
       id: 'callout-1',
-      content: 'This editor returns structured JSON that you can store in your database and render later.',
+      content:
+        'This editor returns structured JSON that you can store in your database and render later.',
       variant: 'tip',
       title: 'Pro Tip',
     },
@@ -147,21 +149,13 @@ await db.courses.update({
           { content: 'Description', header: true },
           { content: 'Use Case', header: true },
         ],
-        [
-          { content: 'Text' },
-          { content: 'Plain text paragraph' },
-          { content: 'General content' },
-        ],
+        [{ content: 'Text' }, { content: 'Plain text paragraph' }, { content: 'General content' }],
         [
           { content: 'Code' },
           { content: 'Syntax highlighted code' },
           { content: 'Technical tutorials' },
         ],
-        [
-          { content: 'Image' },
-          { content: 'Base64 encoded images' },
-          { content: 'Visual content' },
-        ],
+        [{ content: 'Image' }, { content: 'Base64 encoded images' }, { content: 'Visual content' }],
       ],
       hasHeader: true,
     },
@@ -213,7 +207,8 @@ const courseContentData: EditorData = {
     {
       type: 'callout',
       id: 'course-callout',
-      content: 'Make sure you have Node.js 16+ and basic React knowledge before starting this lesson.',
+      content:
+        'Make sure you have Node.js 16+ and basic React knowledge before starting this lesson.',
       variant: 'info',
       title: 'Prerequisites',
     },
@@ -227,7 +222,8 @@ const courseContentData: EditorData = {
     {
       type: 'text',
       id: 'text-intro',
-      content: 'React Hooks are functions that let you "hook into" React state and lifecycle features from function components. Hooks don\'t work inside classes — they let you use React without classes.',
+      content:
+        'React Hooks are functions that let you "hook into" React state and lifecycle features from function components. Hooks don\'t work inside classes — they let you use React without classes.',
       fontSize: 'base',
       alignment: 'left',
     },
@@ -272,7 +268,8 @@ function Counter() {
     {
       type: 'callout',
       id: 'warning-callout',
-      content: 'Don\'t call Hooks inside loops, conditions, or nested functions. Always use Hooks at the top level of your React function.',
+      content:
+        "Don't call Hooks inside loops, conditions, or nested functions. Always use Hooks at the top level of your React function.",
       variant: 'warning',
       title: 'Important Rule',
     },
@@ -318,20 +315,22 @@ export const LivePreview: Story = {
     const [data, setData] = useState<EditorData>(sampleData);
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const isDark = theme === 'dark';
-    
+
     return (
       <div className={`min-h-screen transition-colors ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
         {/* Header */}
-        <div className={`sticky top-0 z-50 px-4 py-3 border-b ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
+        <div
+          className={`sticky top-0 z-50 px-4 py-3 border-b ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}
+        >
           <div className="flex items-center justify-between max-w-[1800px] mx-auto">
             <h1 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
               Pages Editor - Live Preview
             </h1>
             <button
-              onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
+              onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                isDark 
-                  ? 'bg-slate-700 text-white hover:bg-slate-600' 
+                isDark
+                  ? 'bg-slate-700 text-white hover:bg-slate-600'
                   : 'bg-slate-200 text-slate-900 hover:bg-slate-300'
               }`}
             >
@@ -339,17 +338,25 @@ export const LivePreview: Story = {
             </button>
           </div>
         </div>
-        
+
         {/* Split View */}
         <div className="flex min-h-[calc(100vh-57px)]">
           {/* Editor Panel */}
-          <div className={`w-1/2 p-6 border-r overflow-auto ${isDark ? 'border-slate-700' : 'border-slate-300'}`}>
-            <div className={`mb-4 pb-3 border-b ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>
-              <h2 className={`text-sm font-semibold uppercase tracking-wide ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+          <div
+            className={`w-1/2 p-6 border-r overflow-auto ${isDark ? 'border-slate-700' : 'border-slate-300'}`}
+          >
+            <div
+              className={`mb-4 pb-3 border-b ${isDark ? 'border-slate-700' : 'border-slate-200'}`}
+            >
+              <h2
+                className={`text-sm font-semibold uppercase tracking-wide ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+              >
                 ✏️ Editor
               </h2>
             </div>
-            <div className={`rounded-xl p-4 ${isDark ? 'bg-slate-800' : 'bg-white shadow-sm border border-slate-200'}`}>
+            <div
+              className={`rounded-xl p-4 ${isDark ? 'bg-slate-800' : 'bg-white shadow-sm border border-slate-200'}`}
+            >
               <PagesEditor
                 initialData={data}
                 onChange={setData}
@@ -357,11 +364,15 @@ export const LivePreview: Story = {
               />
             </div>
           </div>
-          
+
           {/* Preview Panel */}
           <div className={`w-1/2 p-6 overflow-auto ${isDark ? 'bg-slate-950' : 'bg-white'}`}>
-            <div className={`mb-4 pb-3 border-b ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>
-              <h2 className={`text-sm font-semibold uppercase tracking-wide ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+            <div
+              className={`mb-4 pb-3 border-b ${isDark ? 'border-slate-700' : 'border-slate-200'}`}
+            >
+              <h2
+                className={`text-sm font-semibold uppercase tracking-wide ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+              >
                 👁️ Preview (Read-Only)
               </h2>
             </div>

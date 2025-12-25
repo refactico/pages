@@ -1,6 +1,15 @@
 // Types for the Pages Editor component
 
-export type BlockType = 'text' | 'heading' | 'image' | 'code' | 'table' | 'divider' | 'quote' | 'list' | 'callout';
+export type BlockType =
+  | 'text'
+  | 'heading'
+  | 'image'
+  | 'code'
+  | 'table'
+  | 'divider'
+  | 'quote'
+  | 'list'
+  | 'callout';
 
 export interface TextStyle {
   bold?: boolean;
@@ -92,15 +101,15 @@ export interface CalloutBlock {
   title?: string;
 }
 
-export type EditorBlock = 
-  | TextBlock 
-  | HeadingBlock 
-  | ImageBlock 
-  | CodeBlock 
-  | TableBlock 
-  | DividerBlock 
-  | QuoteBlock 
-  | ListBlock 
+export type EditorBlock =
+  | TextBlock
+  | HeadingBlock
+  | ImageBlock
+  | CodeBlock
+  | TableBlock
+  | DividerBlock
+  | QuoteBlock
+  | ListBlock
   | CalloutBlock;
 
 export interface EditorData {
@@ -164,4 +173,4 @@ export const SUPPORTED_LANGUAGES = [
   'plaintext',
 ] as const;
 
-export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];

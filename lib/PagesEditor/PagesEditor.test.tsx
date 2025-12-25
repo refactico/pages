@@ -2,7 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PagesEditor } from './PagesEditor';
-import type { EditorData, TextBlock as TextBlockType, HeadingBlock as HeadingBlockType } from './types';
+import type {
+  EditorData,
+  TextBlock as TextBlockType,
+  HeadingBlock as HeadingBlockType,
+} from './types';
 import {
   createEmptyEditorData,
   createTextBlock,
@@ -60,7 +64,12 @@ describe('PagesEditor', () => {
       ],
     };
 
-    render(<PagesEditor initialData={initialData} readOnly />);
+    render(
+      <PagesEditor
+        initialData={initialData}
+        readOnly
+      />,
+    );
     expect(screen.queryByText('Add First Block')).not.toBeInTheDocument();
     expect(screen.queryByText('Add Block')).not.toBeInTheDocument();
   });
@@ -82,15 +91,21 @@ describe('PagesEditor', () => {
       ],
     };
 
-    render(<PagesEditor initialData={initialData} onChange={onChange} debounceDelay={100} />);
-    
+    render(
+      <PagesEditor
+        initialData={initialData}
+        onChange={onChange}
+        debounceDelay={100}
+      />,
+    );
+
     const textarea = screen.getByDisplayValue('Initial text');
     await userEvent.clear(textarea);
     await userEvent.type(textarea, 'Updated text');
-    
+
     // Wait for debounce
     await vi.advanceTimersByTimeAsync(200);
-    
+
     expect(onChange).toHaveBeenCalled();
     vi.useRealTimers();
   });
@@ -163,7 +178,7 @@ describe('Utils', () => {
     it('creates a deep copy with new id', () => {
       const original = createTextBlock('Test') as TextBlockType;
       const cloned = cloneBlock(original) as TextBlockType;
-      
+
       expect(cloned.id).not.toBe(original.id);
       expect(cloned.content).toBe(original.content);
       expect(cloned.type).toBe(original.type);

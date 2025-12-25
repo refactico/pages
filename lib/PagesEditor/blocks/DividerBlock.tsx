@@ -14,9 +14,14 @@ const styleMap = {
   dotted: 'border-dotted',
 };
 
-export const DividerBlock: React.FC<DividerBlockProps> = ({ block, onUpdate, readOnly, theme = 'light' }) => {
+export const DividerBlock: React.FC<DividerBlockProps> = ({
+  block,
+  onUpdate,
+  readOnly,
+  theme = 'light',
+}) => {
   const isDark = theme === 'dark';
-  
+
   const cycleStyle = () => {
     if (readOnly) return;
     const styles: ('solid' | 'dashed' | 'dotted')[] = ['solid', 'dashed', 'dotted'];
@@ -30,15 +35,17 @@ export const DividerBlock: React.FC<DividerBlockProps> = ({ block, onUpdate, rea
       <hr
         onClick={cycleStyle}
         className={`border-t-2 ${styleMap[block.style || 'solid']} ${
-          isDark 
+          isDark
             ? 'border-slate-700' + (!readOnly ? ' hover:border-slate-500' : '')
             : 'border-slate-200' + (!readOnly ? ' hover:border-slate-400' : '')
         } ${!readOnly ? 'cursor-pointer' : ''}`}
       />
       {!readOnly && (
-        <p className={`text-xs text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity ${
-          isDark ? 'text-slate-500' : 'text-slate-400'
-        }`}>
+        <p
+          className={`text-xs text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+            isDark ? 'text-slate-500' : 'text-slate-400'
+          }`}
+        >
           Click to change style ({block.style || 'solid'})
         </p>
       )}

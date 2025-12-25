@@ -38,7 +38,7 @@ export function useToolbarPosition({
 
     const rect = containerRef.current.getBoundingClientRect();
     const spaceAbove = rect.top - topOffset;
-    
+
     // If not enough space above, show below
     setShowBelow(spaceAbove < minSpaceAbove);
   }, [containerRef, isVisible, minSpaceAbove, topOffset]);
@@ -70,7 +70,7 @@ export function useToolbarPosition({
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
-      
+
       scrollParents.forEach((parent) => {
         parent.removeEventListener('scroll', handleScroll);
       });
