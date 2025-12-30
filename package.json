@@ -12,6 +12,10 @@
   "bugs": {
     "url": "https://github.com/refactico/pages/issues"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "homepage": "https://github.com/refactico/pages#readme",
   "keywords": [
     "react",
