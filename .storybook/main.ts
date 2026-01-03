@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { withoutVitePlugins } from '@storybook/builder-vite';
+import tailwindcss from '@tailwindcss/vite';
 
 const config: StorybookConfig = {
   stories: ['../lib/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -13,7 +14,10 @@ const config: StorybookConfig = {
   },
   viteFinal: async (config) => ({
     ...config,
-    plugins: await withoutVitePlugins(config.plugins, ['vite:dts']), // skip dts plugin
+    plugins: [
+      ...(await withoutVitePlugins(config.plugins, ['vite:dts'])),
+      tailwindcss(),
+    ],
   }),
 };
 export default config;

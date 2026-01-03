@@ -17,11 +17,38 @@ npm install @refactico/pages
 pnpm add @refactico/pages
 ```
 
+## Tailwind CSS Setup (Required)
+
+This library uses Tailwind CSS utility classes and requires Tailwind CSS v4+ as a peer dependency. Your application must have Tailwind configured and include the library's source files for class scanning.
+
+### 1. Install Tailwind CSS
+
+If you haven't already, install Tailwind CSS in your project:
+
+```bash
+npm install tailwindcss @tailwindcss/vite
+# or
+pnpm add tailwindcss @tailwindcss/vite
+```
+
+### 2. Configure Content Sources
+
+Add the `@source` directive to your CSS file to include the library's classes in your Tailwind build:
+
+```css
+/* your-app/src/index.css */
+@import "tailwindcss";
+
+/* Include Tailwind classes from @refactico/pages components */
+@source "../node_modules/@refactico/pages/dist";
+```
+
+This tells Tailwind to scan the `@refactico/pages` distribution files for class names, ensuring all styles are included in your bundle.
+
 ## Usage
 
 ```tsx
 import { PagesEditor, createEmptyEditorData } from '@refactico/pages';
-import '@refactico/pages/style.css';
 
 function App() {
   const [data, setData] = useState(createEmptyEditorData());
