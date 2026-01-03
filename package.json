@@ -1,7 +1,7 @@
 {
   "name": "@refactico/pages",
   "private": false,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A component library for building pages with React.",
   "author": "refactico",
   "license": "MIT",
