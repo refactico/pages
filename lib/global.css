@@ -1,19 +1,5 @@
-/* Import only utilities and theme, skip base/preflight to avoid global style conflicts */
-@layer theme, utilities;
-
-@import 'tailwindcss/theme' layer(theme);
-@import 'tailwindcss/utilities' layer(utilities);
-
-/* Scoped reset for pages-editor only */
-.pages-editor {
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
-}
+/* 
+ * This file is intentionally minimal.
+ * The consuming application should have Tailwind CSS configured.
+ * All styles use Tailwind utility classes which will be processed by the host app's Tailwind setup.
+ */
