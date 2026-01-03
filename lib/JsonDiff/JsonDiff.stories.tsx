@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { JsonDiff } from './JsonDiff';
 import type { EditorData } from '../PagesEditor/types';
 
@@ -155,7 +155,7 @@ export const WithRevertFunctionality: Story = {
               Review Changes Before Publishing
             </h1>
             <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Click "Revert" on any change to undo it
+              Click &quot;Revert&quot; on any change to undo it
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -341,7 +341,13 @@ const courseOldData: EditorData = {
       fontSize: 'base',
     },
     { type: 'heading', id: 'h2', content: 'Installation', level: 2 },
-    { type: 'code', id: 'c1', code: 'npm install my-package', language: 'bash', showLineNumbers: false },
+    {
+      type: 'code',
+      id: 'c1',
+      code: 'npm install my-package',
+      language: 'bash',
+      showLineNumbers: false,
+    },
     {
       type: 'callout',
       id: 'call1',
@@ -352,7 +358,11 @@ const courseOldData: EditorData = {
     {
       type: 'list',
       id: 'l1',
-      items: ['Step 1: Clone the repository', 'Step 2: Install dependencies', 'Step 3: Run the app'],
+      items: [
+        'Step 1: Clone the repository',
+        'Step 2: Install dependencies',
+        'Step 3: Run the app',
+      ],
       listType: 'numbered',
     },
   ],
@@ -373,7 +383,8 @@ const courseNewData: EditorData = {
     {
       type: 'text',
       id: 't1',
-      content: 'Welcome to this comprehensive guide on building modern web applications with React.',
+      content:
+        'Welcome to this comprehensive guide on building modern web applications with React.',
       fontSize: 'lg',
     },
     { type: 'heading', id: 'h2', content: 'Installation', level: 2 },
@@ -397,7 +408,13 @@ const courseNewData: EditorData = {
       listType: 'numbered',
     },
     { type: 'divider', id: 'div1', style: 'dashed' },
-    { type: 'quote', id: 'q1', content: 'The best way to learn is by doing.', author: 'Unknown', style: 'modern' },
+    {
+      type: 'quote',
+      id: 'q1',
+      content: 'The best way to learn is by doing.',
+      author: 'Unknown',
+      style: 'modern',
+    },
   ],
 };
 

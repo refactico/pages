@@ -12,7 +12,6 @@ import {
   UnifiedIcon,
   GripVerticalIcon,
   UndoIcon,
-  XIcon,
 } from './icons';
 
 // Hook to detect mobile viewport
@@ -60,10 +59,7 @@ export function JsonDiff({
   }, [isMobile, viewMode]);
 
   // Compute diff between old and current (not newData, so reverts are reflected)
-  const diffResult = useMemo(
-    () => compareEditorData(oldData, currentData),
-    [oldData, currentData]
-  );
+  const diffResult = useMemo(() => compareEditorData(oldData, currentData), [oldData, currentData]);
 
   // Draggable divider handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -80,7 +76,7 @@ export function JsonDiff({
       const clampedPosition = Math.max(minPanelWidth, Math.min(100 - minPanelWidth, newPosition));
       setSplitPosition(clampedPosition);
     },
-    [isDragging, minPanelWidth]
+    [isDragging, minPanelWidth],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -130,7 +126,7 @@ export function JsonDiff({
       } else if (diff.type === 'modified' && diff.oldBlock && diff.newBlock) {
         // Replace with old version
         newBlocks = currentData.blocks.map((b) =>
-          b.id === diff.newBlock!.id ? diff.oldBlock! : b
+          b.id === diff.newBlock!.id ? diff.oldBlock! : b,
         );
       } else {
         return;
@@ -145,21 +141,7 @@ export function JsonDiff({
       setCurrentData(updatedData);
       onChange?.(updatedData);
     },
-    [currentData, oldData, onChange]
-  );
-
-  // Accept a change (dismiss the revert option) - for removed blocks, permanently remove
-  const handleAccept = useCallback(
-    (diff: BlockDiff) => {
-      // For most cases, the change is already in currentData, so nothing to do
-      // But we could track "accepted" state if needed for UI purposes
-      // For now, this is mainly useful for removed blocks to confirm deletion
-      if (diff.type === 'removed' && diff.oldBlock) {
-        // Already removed, just trigger onChange to confirm
-        onChange?.(currentData);
-      }
-    },
-    [currentData, onChange]
+    [currentData, oldData, onChange],
   );
 
   // Get diff type styling
@@ -207,13 +189,15 @@ export function JsonDiff({
     diffType: DiffType,
     showBadge: boolean,
     badgeLabel?: string,
-    diff?: BlockDiff
+    diff?: BlockDiff,
   ) => {
     const style = getDiffStyles(diffType);
     const showRevert = allowRevert && diff && diffType !== 'unchanged';
 
     return (
-      <div className={`relative rounded-xl border-2 ${style.border} ${style.bg} overflow-hidden h-full`}>
+      <div
+        className={`relative rounded-xl border-2 ${style.border} ${style.bg} overflow-hidden h-full`}
+      >
         {/* Header with badge and actions */}
         <div
           className={`flex items-center justify-between px-4 py-2 border-b ${
@@ -257,7 +241,10 @@ export function JsonDiff({
 
         {/* Block content */}
         <div className="p-4">
-          <BlockRenderer block={block} theme={theme} />
+          <BlockRenderer
+            block={block}
+            theme={theme}
+          />
         </div>
       </div>
     );
@@ -270,9 +257,7 @@ export function JsonDiff({
         isDark ? 'border-slate-700 bg-slate-800/30' : 'border-slate-200 bg-slate-50'
       }`}
     >
-      <span className={`text-sm ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
-        {message}
-      </span>
+      <span className={`text-sm ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{message}</span>
       {showRevert && allowRevert && diff && (
         <button
           onClick={() => handleRevert(diff)}
@@ -293,7 +278,10 @@ export function JsonDiff({
   const renderUnifiedDiffItem = (diff: BlockDiff, index: number) => {
     if (diff.type === 'unchanged') {
       return (
-        <div key={diff.oldBlock?.id || index} className="opacity-60">
+        <div
+          key={diff.oldBlock?.id || index}
+          className="opacity-60"
+        >
           {renderBlockContent(diff.oldBlock!, 'unchanged', false)}
         </div>
       );
@@ -317,7 +305,10 @@ export function JsonDiff({
 
     // Modified - show both old and new
     return (
-      <div key={diff.oldBlock?.id || index} className="space-y-2">
+      <div
+        key={diff.oldBlock?.id || index}
+        className="space-y-2"
+      >
         <div className="relative pl-4">
           <div
             className={`absolute left-0 top-0 bottom-0 w-1 rounded-full ${
@@ -458,11 +449,7 @@ export function JsonDiff({
                 <GripVerticalIcon
                   size={18}
                   className={`transition-colors ${
-                    isDragging
-                      ? 'text-white'
-                      : isDark
-                        ? 'text-slate-400'
-                        : 'text-slate-500'
+                    isDragging ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-500'
                   }`}
                 />
               </div>
@@ -471,11 +458,7 @@ export function JsonDiff({
             {/* Vertical divider line */}
             <div
               className={`absolute top-0 bottom-0 w-px transition-colors ${
-                isDragging
-                  ? 'bg-indigo-500'
-                  : isDark
-                    ? 'bg-slate-700'
-                    : 'bg-slate-300'
+                isDragging ? 'bg-indigo-500' : isDark ? 'bg-slate-700' : 'bg-slate-300'
               }`}
               style={{ left: `${splitPosition}%` }}
             />
@@ -521,9 +504,15 @@ export function JsonDiff({
               {/* Diff rows */}
               <div className="space-y-4">
                 {diffResult.blocks.map((diff, idx) => (
-                  <div key={diff.oldBlock?.id || diff.newBlock?.id || idx} className="flex">
+                  <div
+                    key={diff.oldBlock?.id || diff.newBlock?.id || idx}
+                    className="flex"
+                  >
                     {/* Left side */}
-                    <div style={{ width: `${splitPosition}%` }} className="flex-shrink-0 pr-6">
+                    <div
+                      style={{ width: `${splitPosition}%` }}
+                      className="flex-shrink-0 pr-6"
+                    >
                       {diff.type === 'added' ? (
                         renderPlaceholder('New block added →', diff, true)
                       ) : diff.type === 'removed' ? (
@@ -537,7 +526,10 @@ export function JsonDiff({
                       )}
                     </div>
                     {/* Right side */}
-                    <div style={{ width: `${100 - splitPosition}%` }} className="flex-shrink-0 pl-6">
+                    <div
+                      style={{ width: `${100 - splitPosition}%` }}
+                      className="flex-shrink-0 pl-6"
+                    >
                       {diff.type === 'removed' ? (
                         renderPlaceholder('← Block removed', diff, true)
                       ) : diff.type === 'added' ? (

@@ -30,21 +30,15 @@ export function deepEqual(a: unknown, b: unknown): boolean {
 /**
  * Get property changes between two blocks
  */
-export function getPropertyChanges(
-  oldBlock: EditorBlock,
-  newBlock: EditorBlock
-): PropertyChange[] {
+export function getPropertyChanges(oldBlock: EditorBlock, newBlock: EditorBlock): PropertyChange[] {
   const changes: PropertyChange[] = [];
   const oldObj = oldBlock as unknown as Record<string, unknown>;
   const newObj = newBlock as unknown as Record<string, unknown>;
-  const allKeys = new Set([
-    ...Object.keys(oldObj),
-    ...Object.keys(newObj),
-  ]);
+  const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)]);
 
   for (const key of allKeys) {
     if (key === 'id') continue; // Skip ID comparison
-    
+
     const oldValue = oldObj[key];
     const newValue = newObj[key];
 
@@ -59,17 +53,13 @@ export function getPropertyChanges(
 /**
  * Compare two EditorData objects and return diff result
  */
-export function compareEditorData(
-  oldData: EditorData,
-  newData: EditorData
-): DiffResult {
+export function compareEditorData(oldData: EditorData, newData: EditorData): DiffResult {
   const oldBlocks = oldData.blocks;
   const newBlocks = newData.blocks;
   const blockDiffs: BlockDiff[] = [];
 
   // Create maps for quick lookup by ID
   const oldBlockMap = new Map(oldBlocks.map((b) => [b.id, b]));
-  const newBlockMap = new Map(newBlocks.map((b) => [b.id, b]));
 
   // Track processed IDs
   const processedIds = new Set<string>();
@@ -150,11 +140,10 @@ export function getBlockPreview(block: EditorBlock, maxLength = 50): string {
     case 'text':
     case 'heading':
     case 'quote':
-    case 'callout':
+    case 'callout': {
       const content = block.content || '';
-      return content.length > maxLength
-        ? content.substring(0, maxLength) + '...'
-        : content;
+      return content.length > maxLength ? content.substring(0, maxLength) + '...' : content;
+    }
     case 'code':
       return block.language || 'code';
     case 'image':
