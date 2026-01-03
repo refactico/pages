@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { CodeBlock as CodeBlockType, Theme } from '../types';
 import { SUPPORTED_LANGUAGES } from '../types';
 import { CopyIcon, CheckIcon } from '../icons';
@@ -20,13 +20,23 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isDark = theme === 'dark';
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onUpdate({ ...block, code: e.target.value });
-    // Auto-resize textarea
+  // Auto-resize textarea to fit content
+  const resizeTextarea = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
+  };
+
+  // Resize on mount and whenever code changes
+  useEffect(() => {
+    if (!readOnly) {
+      resizeTextarea();
+    }
+  }, [block.code, readOnly]);
+
+  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onUpdate({ ...block, code: e.target.value });
   };
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
