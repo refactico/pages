@@ -11,12 +11,6 @@ interface ImageBlockProps {
   theme?: Theme;
 }
 
-const alignmentMap = {
-  left: 'mr-auto',
-  center: 'mx-auto',
-  right: 'ml-auto',
-};
-
 export const ImageBlock: React.FC<ImageBlockProps> = ({
   block,
   onUpdate,
@@ -212,13 +206,14 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
       )}
 
       <figure
-        className={`${alignmentMap[block.alignment || 'center']}`}
-        style={{ maxWidth: block.width ? `${block.width}px` : '100%' }}
+        className="flex flex-col items-center w-full"
+        style={{ maxWidth: '100%' }}
       >
         <img
           src={block.src}
           alt={block.alt || ''}
           className="max-w-full h-auto rounded-xl shadow-sm"
+          style={{ maxWidth: block.width ? `${block.width}px` : '100%' }}
         />
         {!readOnly ? (
           <div className="mt-3 space-y-2">

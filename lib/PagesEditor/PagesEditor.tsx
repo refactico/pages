@@ -226,13 +226,11 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
                     Add First Block
                   </button>
                   {showInitialAddMenu && (
-                    <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-50">
-                      <AddBlockMenu
-                        onAdd={(type) => addBlock(type)}
-                        onClose={() => setShowInitialAddMenu(false)}
-                        theme={theme}
-                      />
-                    </div>
+                    <AddBlockMenu
+                      onAdd={(type) => addBlock(type)}
+                      onClose={() => setShowInitialAddMenu(false)}
+                      theme={theme}
+                    />
                   )}
                 </div>
               )}
@@ -289,13 +287,11 @@ export const PagesEditor: React.FC<PagesEditorProps> = ({
                     Add Block
                   </button>
                   {showInitialAddMenu && (
-                    <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50">
-                      <AddBlockMenu
-                        onAdd={(type) => addBlock(type)}
-                        onClose={() => setShowInitialAddMenu(false)}
-                        theme={theme}
-                      />
-                    </div>
+                    <AddBlockMenu
+                      onAdd={(type) => addBlock(type)}
+                      onClose={() => setShowInitialAddMenu(false)}
+                      theme={theme}
+                    />
                   )}
                 </div>
               </div>

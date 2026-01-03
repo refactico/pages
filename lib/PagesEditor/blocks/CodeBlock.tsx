@@ -122,7 +122,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       </div>
 
       {/* Code area */}
-      <div className="relative flex overflow-x-auto">
+      <div className="relative flex">
         {block.showLineNumbers && (
           <div className="flex-shrink-0 py-4 pl-4 pr-3 text-right select-none border-r border-slate-800">
             {lineNumbers.map((num) => (
@@ -135,9 +135,9 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
             ))}
           </div>
         )}
-        <div className="flex-1 p-4 overflow-x-auto">
+        <div className="flex-1 p-4">
           {readOnly ? (
-            <pre className="text-sm text-slate-100 font-mono leading-6 whitespace-pre">
+            <pre className="text-sm text-slate-100 font-mono leading-6 whitespace-pre overflow-x-auto">
               <code>{block.code}</code>
             </pre>
           ) : (
@@ -147,8 +147,8 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               onChange={handleCodeChange}
               placeholder="// Write your code here..."
               spellCheck={false}
-              className="w-full min-h-[100px] text-sm text-slate-100 font-mono leading-6 bg-transparent outline-none resize-none placeholder:text-slate-600"
-              style={{ tabSize: 2 }}
+              className="w-full min-h-[100px] text-sm text-slate-100 font-mono leading-6 bg-transparent outline-none resize-none placeholder:text-slate-600 overflow-hidden"
+              style={{ tabSize: 2, height: 'auto' }}
               onKeyDown={(e) => {
                 if (e.key === 'Tab') {
                   e.preventDefault();

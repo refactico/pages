@@ -85,7 +85,6 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
 
   const handleBlockClick = useCallback(
     (e: React.MouseEvent) => {
-      // Don't select if clicking on an input/textarea/button inside the block
       const target = e.target as HTMLElement;
       const interactiveElements = ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'];
       if (interactiveElements.includes(target.tagName)) {
@@ -98,7 +97,6 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
     [readOnly],
   );
 
-  // Type-safe block renderer using discriminated union
   const renderBlock = useCallback(() => {
     const commonProps = { readOnly, theme };
 
@@ -176,7 +174,6 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
           />
         );
       default: {
-        // TypeScript exhaustive check - this should never happen
         const _exhaustiveCheck: never = block;
         return <div>Unknown block type: {(_exhaustiveCheck as EditorBlock).type}</div>;
       }
@@ -189,9 +186,6 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
       : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
   }`;
 
-  const showControls = !readOnly && isSelected;
-
-  // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (readOnly || !isSelected) return;
@@ -203,7 +197,6 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
           break;
         case 'Delete':
         case 'Backspace':
-          // Only delete if not focused on an input
           if (!(e.target as HTMLElement).matches('input, textarea, [contenteditable]')) {
             e.preventDefault();
             onDelete();
@@ -232,7 +225,6 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
     [readOnly, isSelected, onDelete, onMoveUp, onMoveDown, onDuplicate],
   );
 
-  // Base border style for edit mode (always visible)
   const editModeBorderClass = !readOnly
     ? isSelected
       ? isDark
@@ -243,8 +235,16 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
         : 'border border-slate-200 rounded-lg hover:border-slate-400'
     : '';
 
-  // Generate accessible block type label
   const blockTypeLabel = block.type.charAt(0).toUpperCase() + block.type.slice(1);
+  const showControls = !readOnly;
+
+  const handleAddBlock = useCallback(
+    (type: string) => {
+      onAddBlock(type, index);
+      setShowAddMenu(false);
+    },
+    [onAddBlock, index],
+  );
 
   return (
     <div
@@ -264,26 +264,27 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
       data-block-index={index}
       data-block-type={block.type}
     >
-      {/* Top toolbar when selected */}
+      {/* Toolbar - always visible on mobile, only when selected on desktop */}
       {showControls && (
         <div
           role="toolbar"
           aria-label="Block controls"
-          className={`flex items-center justify-between gap-1 px-2 py-1.5 mb-1 rounded-t-lg border-b ${
-            isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'
-          }`}
+          className={`relative flex items-center justify-between gap-1 px-2 py-1.5 mb-1 rounded-t-lg border-b ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`}
         >
           <div
             className="flex items-center gap-1"
             role="group"
             aria-label="Reorder controls"
           >
-            {/* Drag handle */}
             <button
               type="button"
               className={`${buttonBaseClass} cursor-grab active:cursor-grabbing`}
               title="Drag to reorder"
               aria-label="Drag to reorder block"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsSelected(true);
+              }}
             >
               <DragIcon size={16} />
             </button>
@@ -362,16 +363,11 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = ({
           </div>
           {/* Add menu dropdown */}
           {showAddMenu && (
-            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 z-50">
-              <AddBlockMenu
-                onAdd={(type) => {
-                  onAddBlock(type, index);
-                  setShowAddMenu(false);
-                }}
-                onClose={() => setShowAddMenu(false)}
-                theme={theme}
-              />
-            </div>
+            <AddBlockMenu
+              onAdd={handleAddBlock}
+              onClose={() => setShowAddMenu(false)}
+              theme={theme}
+            />
           )}
         </div>
       )}

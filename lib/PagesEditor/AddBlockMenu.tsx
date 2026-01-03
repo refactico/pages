@@ -54,7 +54,54 @@ const blockOptions: {
 export const AddBlockMenu: React.FC<AddBlockMenuProps> = ({ onAdd, onClose, theme = 'light' }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const [focusedIndex, setFocusedIndex] = useState(0);
+  const [alignment, setAlignment] = useState<'left' | 'right' | 'center'>('left');
   const isDark = theme === 'dark';
+
+  // Adjust menu position to stay within viewport
+  useEffect(() => {
+    const adjustPosition = () => {
+      if (!menuRef.current) return;
+
+      const menu = menuRef.current;
+      const rect = menu.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const menuWidth = rect.width;
+      const padding = 8; // 8px padding from edges
+      const parentRect = menu.parentElement?.getBoundingClientRect();
+
+      if (!parentRect) return;
+
+      // Check if aligning left would overflow right
+      const leftAlignedRight = parentRect.left + menuWidth;
+      const overflowsRight = leftAlignedRight > viewportWidth - padding;
+
+      // Check if aligning right would overflow left
+      const rightAlignedLeft = parentRect.right - menuWidth;
+      const overflowsLeft = rightAlignedLeft < padding;
+
+      if (overflowsRight && overflowsLeft) {
+        // No space on either side - center it
+        setAlignment('center');
+      } else if (overflowsRight) {
+        // No space on right - align to right of button
+        setAlignment('right');
+      } else {
+        // Default - align to left of button
+        setAlignment('left');
+      }
+    };
+
+    // Use a small delay to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      adjustPosition();
+    }, 0);
+
+    window.addEventListener('resize', adjustPosition);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', adjustPosition);
+    };
+  }, []);
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
@@ -123,9 +170,13 @@ export const AddBlockMenu: React.FC<AddBlockMenuProps> = ({ onAdd, onClose, them
       aria-label="Add block menu"
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      className={`absolute z-50 mt-2 w-72 max-h-80 overflow-y-auto rounded-xl shadow-xl border animate-in fade-in slide-in-from-top-2 duration-200 focus:outline-none ${
-        isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
-      }`}
+      className={`absolute z-50 top-full mt-2 w-72 max-w-[calc(100vw-16px)] max-h-80 overflow-y-auto rounded-xl shadow-xl border animate-in fade-in slide-in-from-top-2 duration-200 focus:outline-none ${
+        alignment === 'center'
+          ? 'left-1/2 -translate-x-1/2'
+          : alignment === 'right'
+            ? 'right-0'
+            : 'left-0'
+      } ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}
     >
       <div className="p-2">
         <p
