@@ -14,10 +14,7 @@ const config: StorybookConfig = {
   },
   viteFinal: async (config) => ({
     ...config,
-    plugins: [
-      ...(await withoutVitePlugins(config.plugins, ['vite:dts'])),
-      tailwindcss(),
-    ],
+    plugins: [...(await withoutVitePlugins(config.plugins, ['vite:dts'])), tailwindcss()],
   }),
 };
 export default config;

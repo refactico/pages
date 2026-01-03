@@ -37,7 +37,7 @@ Add the `@source` directive to your CSS file to include the library's classes in
 
 ```css
 /* your-app/src/index.css */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Include Tailwind classes from @refactico/pages components */
 @source "../node_modules/@refactico/pages/dist";
